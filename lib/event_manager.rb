@@ -24,6 +24,26 @@ def save_thank_you_letters(id,form_letter)
 		file.puts form_letter
 	end	
 end
+
+def clean_phone_no(number)
+	number = number.to_s.tr('^0-9', '')
+	
+	if number.length.between?(10,11)
+		if number.length == 10
+			return number			
+		else
+			if number[0] == "1"
+				number = number[1..10]
+				return number
+			else
+				return "Bad Number"
+			end		
+		end
+	else
+		return "Bad Number"	
+	end	
+end
+
 	
 puts "Event Manager Initialized!!!"
 
@@ -35,6 +55,7 @@ erb_template = ERB.new template_letter
 contents.each do |row|
 	id = row[0]
 	name = row[:first_name]
+	phone_no = clean_phone_no(row[:homephone]) #this checks the phone number but i'm not doing anything else with that number at the moment.
 	zipcode = clean_zipcode(row[:zipcode])
 	legislators = legislators_by_zipcode(zipcode)	
 
@@ -44,4 +65,4 @@ contents.each do |row|
 	
 end
 
-#4 form letters
+#todo time targeting
