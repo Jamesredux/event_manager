@@ -1,0 +1,36 @@
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Report</title>
+</head>
+<body>
+  <h1>Registration Report</h1>
+  
+
+  <p>
+   A report  on the most popular hours and days that people registered.
+  </p>
+
+  <table>
+  <tr><th>Hour</th><th>Number of Registrations</th></tr>
+    <% reg_results.each do |hour, amount| %>
+      <tr>
+        <td><%= "#{sprintf '%02d', hour}:00" %></td>
+        <td><%= "#{amount}" %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <p></p>
+
+  <table>
+  <tr><th>Day</th><th>Number of Registrations</th></tr>
+    <% day_results.each do |day, amount| %>
+      <tr>
+        <td><%= "#{day}" %></td>
+        <td><%= "#{amount}" %></td>
+      </tr>
+    <% end %>
+  </table>
+</body>
+</html>

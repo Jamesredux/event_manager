@@ -44,6 +44,8 @@ def clean_phone_no(number)
 	end	
 end
 
+
+
 	
 puts "Event Manager Initialized!!!"
 
@@ -63,6 +65,98 @@ contents.each do |row|
 
 	save_thank_you_letters(id,form_letter)
 	
+	
 end
 
-#todo time targeting
+
+def hour_report(array)
+
+	reg_hash = Hash.new(0)
+	array.each{|key| reg_hash[key] += 1}
+	reg_hash = reg_hash.sort_by { |key, value| value }.reverse
+	reg_hash
+end
+
+def convert_days(array)
+
+	days_array = array.map do |i|
+		day = i 
+		case day
+		when 0
+			i = "Sunday"
+		when 1
+		  i = "Monday"
+		when 2
+			i = "Tuesday"
+		when 3
+			i = "Wednesday"
+		when 4
+			i = "Thursday"
+		when 5
+			i = "Friday"
+		when 6
+			i = "Saturday" 	
+		end
+	end	
+	days_array
+	
+end
+
+def day_report(array)
+	reg_day_hash = Hash.new(0)
+	array.each{ |key| reg_day_hash[key] += 1}
+	reg_day_hash = reg_day_hash.sort_by {|key, value| value}.reverse
+	reg_day_hash
+	
+end
+
+def best_hour_day(final_report)
+	Dir.mkdir("analysis") unless Dir.exists?("analysis")
+	
+	filename = "analysis/report.html"
+
+	File.open(filename, 'w') do |file|
+		file.puts final_report
+	end	
+end
+
+def best_hour
+	h_report = File.read "report.erb"
+  erb_template = ERB.new h_report 
+
+	contents = CSV.open "event_attendees.csv", headers: true, header_converters: :symbol
+	hours = []
+	days = []
+	contents.each do |row|
+		datetime = DateTime.strptime(row[:regdate], '%m/%d/%y %H:%M')
+	
+		hours<<datetime.hour
+		days<<datetime.wday
+		
+		
+
+	end
+	days = convert_days(days)   #converts wday number to day string
+	puts days.inspect
+
+	reg_results = hour_report(hours)
+	day_results = day_report(days)
+	pop_hour = hours.max_by { |i| hours.count(i) }
+	final_report = erb_template.result(binding)
+	best_hour_day(final_report)
+	
+
+end
+
+
+best_hour
+
+
+#take date, 
+
+#as best hour method is in the contents each do it will have to accumulate the numbers somehow
+
+
+
+
+
